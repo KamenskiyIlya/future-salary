@@ -2,7 +2,6 @@ import json
 
 import requests
 from terminaltables import AsciiTable
-from pprint import pprint
 from environs import Env
 
 
