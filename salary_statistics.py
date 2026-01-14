@@ -91,7 +91,10 @@ def get_vacancies_statistics_hh(url, prog_languages):
     return vacancies_statistics
 
 
-def get_vacancies_amount_sj(url, prog_languages):
+def get_vacancies_amount_sj(url, prog_languages, superjob_token):
+    headers = {
+        'X-Api-App-Id': superjob_token
+    }
     vacancies_amount = {}
     for lang in prog_languages:
         params = {
@@ -100,14 +103,17 @@ def get_vacancies_amount_sj(url, prog_languages):
             'keyword':f'{lang}',
             'period': 30
         }
-        response = requests.get(url, headers=headers_sj, params=params)
+        response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
         response_payload = response.json()
         vacancies_amount[lang] = response_payload["total"]
     return vacancies_amount
 
 
-def get_vacancies_sj(url, prog_language):
+def get_vacancies_sj(url, prog_language, superjob_token):
+    headers = {
+        'X-Api-App-Id': superjob_token
+    }
     vacancies = []
     page = 0
     next_page = True
@@ -119,7 +125,7 @@ def get_vacancies_sj(url, prog_language):
             'period': 30,
             'page': page
         }
-        response = requests.get(url, headers=headers_sj, params=params)
+        response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
         response_payload = response.json()
 
@@ -157,11 +163,11 @@ def predict_rub_salary_sj(vacancy):
     return salary_rub
 
 
-def get_vacancies_statistics_sj(url, prog_languages):
-    vacancies_amount = get_vacancies_amount_sj(url, prog_languages)
+def get_vacancies_statistics_sj(url, prog_languages, superjob_token):
+    vacancies_amount = get_vacancies_amount_sj(url, prog_languages, superjob_token)
     vacancies_statistics = {}
     for lang in prog_languages:
-        salary_list = get_vacancies_salary_sj(get_vacancies_sj(url, lang))
+        salary_list = get_vacancies_salary_sj(get_vacancies_sj(url, lang, superjob_token))
         vacancies_statistics[lang] = {
             "vacancies_found": vacancies_amount[lang],
             "vacancies_processed": count_vacancies_with_salary(salary_list),
@@ -220,12 +226,10 @@ def create_table(vacancies_statistics, name_table):
 
 def main():
     env = Env()
+    env.read_env()
     superjob_token = env.str('SJ_TOKEN')
     url_hh = 'https://api.hh.ru/vacancies'
     url_sj = 'https://api.superjob.ru/2.0/vacancies/'
-    headers_sj = {
-        'X-Api-App-Id': superjob_token
-    }
     prog_languages = [
         'Python',
         'Java',
@@ -240,7 +244,7 @@ def main():
     ]
 
     vacancies_statistics_hh = get_vacancies_statistics_hh(url_hh, prog_languages)
-    vacancies_statistics_sj = get_vacancies_statistics_sj(url_sj, prog_languages)
+    vacancies_statistics_sj = get_vacancies_statistics_sj(url_sj, prog_languages, superjob_token)
 
     table_hh = create_table(vacancies_statistics_hh, 'HeadHunter Moscow')
     table_sj = create_table(vacancies_statistics_sj, 'SuperJob Moscow')
