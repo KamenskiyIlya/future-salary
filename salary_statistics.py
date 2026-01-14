@@ -218,10 +218,14 @@ def create_table(vacancies_statistics, name_table):
     return(table)
 
 
-if __name__ == '__main__':
+def main():
     env = Env()
     superjob_token = env.str('SJ_TOKEN')
-
+    url_hh = 'https://api.hh.ru/vacancies'
+    url_sj = 'https://api.superjob.ru/2.0/vacancies/'
+    headers_sj = {
+        'X-Api-App-Id': superjob_token
+    }
     prog_languages = [
         'Python',
         'Java',
@@ -234,12 +238,6 @@ if __name__ == '__main__':
         'C',
         'PHP'
     ]
-    url_hh = 'https://api.hh.ru/vacancies'
-
-    url_sj = 'https://api.superjob.ru/2.0/vacancies/'
-    headers_sj = {
-        'X-Api-App-Id': superjob_token
-    }
 
     vacancies_statistics_hh = get_vacancies_statistics_hh(url_hh, prog_languages)
     vacancies_statistics_sj = get_vacancies_statistics_sj(url_sj, prog_languages)
@@ -249,3 +247,14 @@ if __name__ == '__main__':
     print(table_hh.table)
     print()
     print(table_sj.table)
+
+
+if __name__ == '__main__':
+    main()
+
+    
+    
+
+    
+
+
