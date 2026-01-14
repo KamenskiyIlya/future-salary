@@ -79,19 +79,6 @@ def predict_rub_salary_hh(vacancy):
     return salary_rub
 
 
-    # if not salary or salary["currency"] != 'RUR':
-    #     return None
-    # elif salary['from'] and salary['to']:
-    #     salary_rub = (salary['from'] + salary['to'])/2
-    #     return int(salary_rub)
-    # elif salary['from'] and not salary['to']:
-    #     salary_rub = salary['from'] * 1.2
-    #     return int(salary_rub)
-    # elif not salary['from'] and salary['to']:
-    #     salary_rub = salary['to'] * 0.8
-    #     return int(salary_rub)
-
-
 def get_vacancies_statistics_hh(url, prog_languages):
     vacancies_amount = get_vacancies_amount_hh(url, prog_languages)
     vacancies_statistics = {}
@@ -169,19 +156,6 @@ def predict_rub_salary_sj(vacancy):
 
     salary_rub = predict_salary(salary_from, salary_to)
     return salary_rub
-
-
-    # if (salary_from == 0 and salary_to == 0) or currency != 'rub':
-    #     return None
-    # elif salary_from != 0 and salary_to != 0:
-    #     salary_rub = (salary_from + salary_to)/2
-    #     return int(salary_rub)
-    # elif salary_from != 0 and salary_to == 0:
-    #     salary_rub = salary_from * 1.2
-    #     return int(salary_rub)
-    # elif not salary_from == 0 and salary_to != 0:
-    #     salary_rub = salary_to * 0.8
-    #     return int(salary_rub)
 
 
 def get_vacancies_statistics_sj(url, prog_languages):
@@ -263,45 +237,10 @@ if __name__ == '__main__':
     ]
     url_hh = 'https://api.hh.ru/vacancies'
 
-    # print(json.dumps(get_vacancies_amount(url, prog_languages), indent=4))
-
-    # salary_list = get_vacancies_salary(url, "Python")
-    # for salary in salary_list:
-    #     print('\t', salary)
-
-    # print(get_average_salary(get_vacancies_salary(url, "Python")))
-
-    # print(json.dumps(vacancies_statistics_hh, indent=4))
-
-
     url_sj = 'https://api.superjob.ru/2.0/vacancies/'
     headers_sj = {
         'X-Api-App-Id': superjob_token
     }
-    # params = {
-    #     'town': 4,
-    #     'catalogues': 48,
-    #     # 'keyword':'python',
-    #     'page': 0
-    # }
-    # response = requests.get(url_sj, headers=headers_sj, params=params)
-    # response.raise_for_status()
-    # response_payload = response.json()
-    # # for vacancy in response_payload['objects']:
-    # #     print(
-    # #         vacancy['profession'],
-    # #         vacancy['town']['title'],
-    # #         predict_rub_salary_sj(vacancy)
-    # #     )
-    # print(response_payload)
-
-    # print(len(get_vacancies_sj(url_sj, 'программист python')))
-
-    # pprint(get_vacancies_sj(url_sj, 'программист python'))
-
-    # print(json.dumps(get_vacancies_amount_sj(url_sj, prog_languages), indent=4))
-
-    # print(json.dumps(vacancies_statistics_sj, indent=4))
 
     vacancies_statistics_hh = get_vacancies_statistics_hh(url_hh, prog_languages)
     vacancies_statistics_sj = get_vacancies_statistics_sj(url_sj, prog_languages)
