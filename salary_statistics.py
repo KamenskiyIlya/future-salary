@@ -58,7 +58,7 @@ def get_vacancies_salary_hh(vacancies):
 
 def predict_rub_salary_hh(vacancy):
     salary = vacancy["salary"]
-    if not vacancy["salary"] :
+    if not vacancy["salary"]:
         return
     elif salary["currency"] != 'RUR':
         return
@@ -71,7 +71,7 @@ def predict_rub_salary_hh(vacancy):
             salary_to = None
         else:
             salary_to = salary['to']
-    
+
     salary_rub = predict_salary(salary_from, salary_to)
     return salary_rub
 
@@ -98,7 +98,7 @@ def get_vacancies_amount_sj(url, prog_languages, superjob_token):
         params = {
             'town': 4,
             'catalogues': 48,
-            'keyword':f'{lang}',
+            'keyword': f'{lang}',
             'period': 30
         }
         response = requests.get(url, headers=headers, params=params)
@@ -119,7 +119,7 @@ def get_vacancies_sj(url, prog_language, superjob_token):
         params = {
             'town': 4,
             'catalogues': 48,
-            'keyword':f'{prog_language}',
+            'keyword': f'{prog_language}',
             'period': 30,
             'page': page
         }
@@ -143,10 +143,11 @@ def get_vacancies_salary_sj(vacancies):
 
 
 def predict_rub_salary_sj(vacancy):
-    if (vacancy['currency'] != 'rub'
+    if (
+        vacancy['currency'] != 'rub'
         or vacancy['payment_from'] == 0
         and vacancy['payment_to'] == 0
-        ):
+    ):
         return
     if vacancy['payment_from'] == 0:
         salary_from = None
@@ -162,15 +163,21 @@ def predict_rub_salary_sj(vacancy):
 
 
 def get_vacancies_statistics_sj(url, prog_languages, superjob_token):
-    vacancies_amount = get_vacancies_amount_sj(url, prog_languages, superjob_token)
+    vacancies_amount = get_vacancies_amount_sj(
+        url,
+        prog_languages,
+        superjob_token
+    )
     vacancies_statistics = {}
     for lang in prog_languages:
-        salary_list = get_vacancies_salary_sj(get_vacancies_sj(url, lang, superjob_token))
+        salary_list = get_vacancies_salary_sj(
+            get_vacancies_sj(url, lang, superjob_token)
+        )
         vacancies_statistics[lang] = {
             "vacancies_found": vacancies_amount[lang],
             "vacancies_processed": count_vacancies_with_salary(salary_list),
             "average_salary": get_average_salary(salary_list)
-        } 
+        }
     return vacancies_statistics
 
 
@@ -208,7 +215,7 @@ def create_table(vacancies_statistics, name_table):
             'Вакансий обработано',
             'Средняя зарплата'
         ]
-    ]    
+    ]
     for lang, statistic in vacancies_statistics.items():
         table_data.append(
             [
@@ -219,7 +226,7 @@ def create_table(vacancies_statistics, name_table):
             ]
         )
     table = AsciiTable(table_data, name_table)
-    return(table)
+    return (table)
 
 
 def main():
@@ -241,8 +248,15 @@ def main():
         'PHP'
     ]
 
-    vacancies_statistics_hh = get_vacancies_statistics_hh(url_hh, prog_languages)
-    vacancies_statistics_sj = get_vacancies_statistics_sj(url_sj, prog_languages, superjob_token)
+    vacancies_statistics_hh = get_vacancies_statistics_hh(
+        url_hh,
+        prog_languages
+    )
+    vacancies_statistics_sj = get_vacancies_statistics_sj(
+        url_sj,
+        prog_languages,
+        superjob_token
+    )
 
     table_hh = create_table(vacancies_statistics_hh, 'HeadHunter Moscow')
     table_sj = create_table(vacancies_statistics_sj, 'SuperJob Moscow')
@@ -253,10 +267,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-    
-    
-
-    
-
-
