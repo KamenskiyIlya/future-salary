@@ -1,5 +1,3 @@
-import json
-
 import requests
 from terminaltables import AsciiTable
 from environs import Env
