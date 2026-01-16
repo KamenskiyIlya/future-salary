@@ -3,7 +3,8 @@ from terminaltables import AsciiTable
 from environs import Env
 
 
-def get_hh_vacancies_amount(url, prog_languages):
+def get_hh_vacancies_amount(prog_languages):
+    url = 'https://api.hh.ru/vacancies'
     vacancies_amount = {}
     for lang in prog_languages:
         params = {
@@ -22,7 +23,8 @@ def get_hh_vacancies_amount(url, prog_languages):
     return vacancies_amount
 
 
-def get_hh_vacancies(url, prog_language):
+def get_hh_vacancies(prog_language):
+    url = 'https://api.hh.ru/vacancies'
     vacancies = []
     page = 0
     pages_number = 1
@@ -76,11 +78,11 @@ def predict_hh_rub_salary(vacancy):
     return salary_rub
 
 
-def get_hh_vacancies_statistics(url, prog_languages):
-    vacancies_amount = get_hh_vacancies_amount(url, prog_languages)
+def get_hh_vacancies_statistics(prog_languages):
+    vacancies_amount = get_hh_vacancies_amount(prog_languages)
     vacancies_statistics = {}
     for lang in prog_languages:
-        salary_list = get_hh_vacancies_salary(get_hh_vacancies(url, lang))
+        salary_list = get_hh_vacancies_salary(get_hh_vacancies(lang))
         vacancies_statistics[lang] = {
             "vacancies_found": vacancies_amount[lang],
             "vacancies_processed": count_vacancies_with_salary(salary_list),
@@ -89,7 +91,8 @@ def get_hh_vacancies_statistics(url, prog_languages):
     return vacancies_statistics
 
 
-def get_sj_vacancies_amount(url, prog_languages, superjob_token):
+def get_sj_vacancies_amount(prog_languages, superjob_token):
+    url = 'https://api.superjob.ru/2.0/vacancies/'
     headers = {
         'X-Api-App-Id': superjob_token
     }
@@ -108,7 +111,8 @@ def get_sj_vacancies_amount(url, prog_languages, superjob_token):
     return vacancies_amount
 
 
-def get_sj_vacancies(url, prog_language, superjob_token):
+def get_sj_vacancies(prog_language, superjob_token):
+    url = 'https://api.superjob.ru/2.0/vacancies/'
     headers = {
         'X-Api-App-Id': superjob_token
     }
@@ -162,16 +166,15 @@ def predict_sj_rub_salary(vacancy):
     return salary_rub
 
 
-def get_sj_vacancies_statistics(url, prog_languages, superjob_token):
+def get_sj_vacancies_statistics(prog_languages, superjob_token):
     vacancies_amount = get_sj_vacancies_amount(
-        url,
         prog_languages,
         superjob_token
     )
     vacancies_statistics = {}
     for lang in prog_languages:
         salary_list = get_sj_vacancies_salary(
-            get_sj_vacancies(url, lang, superjob_token)
+            get_sj_vacancies(lang, superjob_token)
         )
         vacancies_statistics[lang] = {
             "vacancies_found": vacancies_amount[lang],
@@ -233,8 +236,6 @@ def main():
     env = Env()
     env.read_env()
     superjob_token = env.str('SJ_TOKEN')
-    hh_url = 'https://api.hh.ru/vacancies'
-    sj_url = 'https://api.superjob.ru/2.0/vacancies/'
     prog_languages = [
         'Python',
         'Java',
@@ -248,12 +249,8 @@ def main():
         'PHP'
     ]
 
-    hh_vacancies_statistics = get_hh_vacancies_statistics(
-        hh_url,
-        prog_languages
-    )
+    hh_vacancies_statistics = get_hh_vacancies_statistics(prog_languages)
     sj_vacancies_statistics = get_sj_vacancies_statistics(
-        sj_url,
         prog_languages,
         superjob_token
     )
