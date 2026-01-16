@@ -25,8 +25,7 @@ def get_hh_vacancies(prog_language):
         response.raise_for_status()
         response_payload = response.json()
 
-        for vacancy in response_payload["items"]:
-            vacancies.append(vacancy)
+        vacancies.extend(response_payload["items"])
 
         pages_number = response_payload["pages"]
         page += 1
@@ -96,8 +95,7 @@ def get_sj_vacancies(prog_language, superjob_token):
         response.raise_for_status()
         response_payload = response.json()
 
-        for vacancy in response_payload['objects']:
-            vacancies.append(vacancy)
+        vacancies.extend(response_payload['objects'])
 
         next_page = response_payload['more']
         page += 1
