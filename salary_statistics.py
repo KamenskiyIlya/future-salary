@@ -6,17 +6,20 @@ from environs import Env
 def get_hh_vacancies(prog_language):
     url = 'https://api.hh.ru/vacancies'
     vacancies = []
+    city_code = '1'
     page = 0
     pages_number = 1
+    vacancies_per_page = 50  # не может быть больше 100
+    period_in_days = 30
     while page < pages_number:
         params = {
-            'area': '1',
+            'area': city_code,
             'page': page,
             "text": f"Программист {prog_language}",
             "text": f"Разработчик {prog_language}",
             "search_field": 'name',
-            "per_page": 20,
-            "period": 30
+            "per_page": vacancies_per_page,
+            "period": period_in_days
         }
         response = requests.get(url, params=params)
         response.raise_for_status()
@@ -76,14 +79,17 @@ def get_sj_vacancies(prog_language, superjob_token):
         'X-Api-App-Id': superjob_token
     }
     vacancies = []
+    city_code = 4
+    industry_code = 48
+    period_in_days = 30
     page = 0
     next_page = True
     while next_page:
         params = {
-            'town': 4,
-            'catalogues': 48,
+            'town': city_code,
+            'catalogues': industry_code,
             'keyword': f'{prog_language}',
-            'period': 30,
+            'period': period_in_days,
             'page': page
         }
         response = requests.get(url, headers=headers, params=params)
