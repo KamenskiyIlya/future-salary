@@ -15,7 +15,6 @@ def get_hh_vacancies(prog_language):
             "text": f"Программист {prog_language}",
             "text": f"Разработчик {prog_language}",
             "search_field": 'name',
-            # "only_with_salary": "true",
             "per_page": 20,
             "period": 30
         }
