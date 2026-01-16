@@ -3,26 +3,6 @@ from terminaltables import AsciiTable
 from environs import Env
 
 
-def get_hh_vacancies_amount(prog_languages):
-    url = 'https://api.hh.ru/vacancies'
-    vacancies_amount = {}
-    for lang in prog_languages:
-        params = {
-            'area': '1',
-            "text": f"Программист {lang}",
-            "text": f"Разработчик {lang}",
-            "search_field": 'name',
-            # "only_with_salary": "true",
-            "per_page": 20,
-            "period": 30
-        }
-        response = requests.get(url, params=params)
-        response.raise_for_status()
-        response_payload = response.json()
-        vacancies_amount[lang] = response_payload["found"]
-    return vacancies_amount
-
-
 def get_hh_vacancies(prog_language):
     url = 'https://api.hh.ru/vacancies'
     vacancies = []
@@ -89,26 +69,6 @@ def get_hh_vacancies_statistics(prog_languages):
             "average_salary": get_average_salary(salary_list)
         }
     return vacancies_statistics
-
-
-def get_sj_vacancies_amount(prog_languages, superjob_token):
-    url = 'https://api.superjob.ru/2.0/vacancies/'
-    headers = {
-        'X-Api-App-Id': superjob_token
-    }
-    vacancies_amount = {}
-    for lang in prog_languages:
-        params = {
-            'town': 4,
-            'catalogues': 48,
-            'keyword': f'{lang}',
-            'period': 30
-        }
-        response = requests.get(url, headers=headers, params=params)
-        response.raise_for_status()
-        response_payload = response.json()
-        vacancies_amount[lang] = response_payload["total"]
-    return vacancies_amount
 
 
 def get_sj_vacancies(prog_language, superjob_token):
