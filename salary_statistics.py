@@ -79,12 +79,12 @@ def predict_hh_rub_salary(vacancy):
 
 
 def get_hh_vacancies_statistics(prog_languages):
-    vacancies_amount = get_hh_vacancies_amount(prog_languages)
     vacancies_statistics = {}
     for lang in prog_languages:
-        salary_list = get_hh_vacancies_salary(get_hh_vacancies(lang))
+        vacancies = get_hh_vacancies(lang)
+        salary_list = get_hh_vacancies_salary(vacancies)
         vacancies_statistics[lang] = {
-            "vacancies_found": vacancies_amount[lang],
+            "vacancies_found": len(vacancies),
             "vacancies_processed": count_vacancies_with_salary(salary_list),
             "average_salary": get_average_salary(salary_list)
         }
@@ -167,17 +167,12 @@ def predict_sj_rub_salary(vacancy):
 
 
 def get_sj_vacancies_statistics(prog_languages, superjob_token):
-    vacancies_amount = get_sj_vacancies_amount(
-        prog_languages,
-        superjob_token
-    )
     vacancies_statistics = {}
     for lang in prog_languages:
-        salary_list = get_sj_vacancies_salary(
-            get_sj_vacancies(lang, superjob_token)
-        )
+        vacancies = get_sj_vacancies(lang, superjob_token)
+        salary_list = get_sj_vacancies_salary(vacancies)
         vacancies_statistics[lang] = {
-            "vacancies_found": vacancies_amount[lang],
+            "vacancies_found": len(vacancies),
             "vacancies_processed": count_vacancies_with_salary(salary_list),
             "average_salary": get_average_salary(salary_list)
         }
