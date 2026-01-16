@@ -3,7 +3,7 @@ from terminaltables import AsciiTable
 from environs import Env
 
 
-def get_vacancies_amount_hh(url, prog_languages):
+def get_hh_vacancies_amount(url, prog_languages):
     vacancies_amount = {}
     for lang in prog_languages:
         params = {
@@ -22,7 +22,7 @@ def get_vacancies_amount_hh(url, prog_languages):
     return vacancies_amount
 
 
-def get_vacancies_hh(url, prog_language):
+def get_hh_vacancies(url, prog_language):
     vacancies = []
     page = 0
     pages_number = 1
@@ -49,14 +49,14 @@ def get_vacancies_hh(url, prog_language):
     return vacancies
 
 
-def get_vacancies_salary_hh(vacancies):
+def get_hh_vacancies_salary(vacancies):
     vacancies_salaries = []
     for vacancy in vacancies:
-        vacancies_salaries.append(predict_rub_salary_hh(vacancy))
+        vacancies_salaries.append(predict_hh_rub_salary(vacancy))
     return vacancies_salaries
 
 
-def predict_rub_salary_hh(vacancy):
+def predict_hh_rub_salary(vacancy):
     salary = vacancy["salary"]
     if not vacancy["salary"]:
         return
@@ -76,11 +76,11 @@ def predict_rub_salary_hh(vacancy):
     return salary_rub
 
 
-def get_vacancies_statistics_hh(url, prog_languages):
-    vacancies_amount = get_vacancies_amount_hh(url, prog_languages)
+def get_hh_vacancies_statistics(url, prog_languages):
+    vacancies_amount = get_hh_vacancies_amount(url, prog_languages)
     vacancies_statistics = {}
     for lang in prog_languages:
-        salary_list = get_vacancies_salary_hh(get_vacancies_hh(url, lang))
+        salary_list = get_hh_vacancies_salary(get_hh_vacancies(url, lang))
         vacancies_statistics[lang] = {
             "vacancies_found": vacancies_amount[lang],
             "vacancies_processed": count_vacancies_with_salary(salary_list),
@@ -89,7 +89,7 @@ def get_vacancies_statistics_hh(url, prog_languages):
     return vacancies_statistics
 
 
-def get_vacancies_amount_sj(url, prog_languages, superjob_token):
+def get_sj_vacancies_amount(url, prog_languages, superjob_token):
     headers = {
         'X-Api-App-Id': superjob_token
     }
@@ -108,7 +108,7 @@ def get_vacancies_amount_sj(url, prog_languages, superjob_token):
     return vacancies_amount
 
 
-def get_vacancies_sj(url, prog_language, superjob_token):
+def get_sj_vacancies(url, prog_language, superjob_token):
     headers = {
         'X-Api-App-Id': superjob_token
     }
@@ -135,14 +135,14 @@ def get_vacancies_sj(url, prog_language, superjob_token):
     return vacancies
 
 
-def get_vacancies_salary_sj(vacancies):
+def get_sj_vacancies_salary(vacancies):
     vacancies_salaries = []
     for vacancy in vacancies:
-        vacancies_salaries.append(predict_rub_salary_sj(vacancy))
+        vacancies_salaries.append(predict_sj_rub_salary(vacancy))
     return vacancies_salaries
 
 
-def predict_rub_salary_sj(vacancy):
+def predict_sj_rub_salary(vacancy):
     if (
         vacancy['currency'] != 'rub'
         or vacancy['payment_from'] == 0
@@ -162,16 +162,16 @@ def predict_rub_salary_sj(vacancy):
     return salary_rub
 
 
-def get_vacancies_statistics_sj(url, prog_languages, superjob_token):
-    vacancies_amount = get_vacancies_amount_sj(
+def get_sj_vacancies_statistics(url, prog_languages, superjob_token):
+    vacancies_amount = get_sj_vacancies_amount(
         url,
         prog_languages,
         superjob_token
     )
     vacancies_statistics = {}
     for lang in prog_languages:
-        salary_list = get_vacancies_salary_sj(
-            get_vacancies_sj(url, lang, superjob_token)
+        salary_list = get_sj_vacancies_salary(
+            get_sj_vacancies(url, lang, superjob_token)
         )
         vacancies_statistics[lang] = {
             "vacancies_found": vacancies_amount[lang],
@@ -233,8 +233,8 @@ def main():
     env = Env()
     env.read_env()
     superjob_token = env.str('SJ_TOKEN')
-    url_hh = 'https://api.hh.ru/vacancies'
-    url_sj = 'https://api.superjob.ru/2.0/vacancies/'
+    hh_url = 'https://api.hh.ru/vacancies'
+    sj_url = 'https://api.superjob.ru/2.0/vacancies/'
     prog_languages = [
         'Python',
         'Java',
@@ -248,21 +248,21 @@ def main():
         'PHP'
     ]
 
-    vacancies_statistics_hh = get_vacancies_statistics_hh(
-        url_hh,
+    hh_vacancies_statistics = get_hh_vacancies_statistics(
+        hh_url,
         prog_languages
     )
-    vacancies_statistics_sj = get_vacancies_statistics_sj(
-        url_sj,
+    sj_vacancies_statistics = get_sj_vacancies_statistics(
+        sj_url,
         prog_languages,
         superjob_token
     )
 
-    table_hh = create_table(vacancies_statistics_hh, 'HeadHunter Moscow')
-    table_sj = create_table(vacancies_statistics_sj, 'SuperJob Moscow')
-    print(table_hh.table)
+    hh_table = create_table(hh_vacancies_statistics, 'HeadHunter Moscow')
+    sj_table = create_table(sj_vacancies_statistics, 'SuperJob Moscow')
+    print(hh_table.table)
     print()
-    print(table_sj.table)
+    print(sj_table.table)
 
 
 if __name__ == '__main__':
