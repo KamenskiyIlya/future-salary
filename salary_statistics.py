@@ -103,8 +103,8 @@ def get_sj_vacancy_salaries(vacancies):
 def predict_sj_rub_salary(vacancy):
     if (
         vacancy['currency'] != 'rub'
-        or vacancy['payment_from'] == 0
-        and vacancy['payment_to'] == 0
+        or not vacancy['payment_from']
+        and not vacancy['payment_to']
     ):
         return
 
