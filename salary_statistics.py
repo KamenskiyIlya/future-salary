@@ -45,15 +45,14 @@ def predict_hh_rub_salary(vacancy):
         return
     elif salary["currency"] != 'RUR':
         return
+    if not salary['from']:
+        salary_from = None
     else:
-        if not salary['from']:
-            salary_from = None
-        else:
-            salary_from = salary['from']
-        if not salary['to']:
-            salary_to = None
-        else:
-            salary_to = salary['to']
+        salary_from = salary['from']
+    if not salary['to']:
+        salary_to = None
+    else:
+        salary_to = salary['to']
 
     salary_rub = predict_salary(salary_from, salary_to)
     return salary_rub
@@ -159,8 +158,7 @@ def get_average_salary(vacancies_salaries):
     if len(vacancies_salaries) != 0:
         avg_salary = sum(vacancies_salaries)/len(vacancies_salaries)
         return int(avg_salary)
-    else:
-        return
+    return
 
 
 def count_vacancies_with_salary(vacancies_salaries):
