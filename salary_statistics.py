@@ -144,13 +144,12 @@ def get_sj_vacancies_statistics(prog_languages, superjob_token):
 def predict_salary(salary_from, salary_to):
     if salary_from and salary_to:
         salary_rub = (salary_from + salary_to)/2
-        return int(salary_rub)
     elif salary_from and not salary_to:
         salary_rub = salary_from * 1.2
-        return int(salary_rub)
     elif not salary_from and salary_to:
         salary_rub = salary_to * 0.8
-        return int(salary_rub)
+
+    return int(salary_rub)
 
 
 def get_average_salary(vacancies_salaries):
