@@ -142,8 +142,8 @@ def predict_salary(salary_from, salary_to):
 
 
 def get_average_salary(vacancies_with_salary):
-    if len(vacancies_salaries):
-        avg_salary = sum(vacancies_salaries)/len(vacancies_salaries)
+    if len(vacancies_with_salary):
+        avg_salary = sum(vacancies_with_salary)/len(vacancies_with_salary)
         return int(avg_salary)
     return
 
