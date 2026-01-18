@@ -55,10 +55,11 @@ def get_hh_vacancies_statistics(prog_languages):
     for lang in prog_languages:
         vacancies = get_hh_vacancies(lang)
         salaries = get_hh_vacancy_salaries(vacancies)
+        vacancies_with_salary = select_vacancies_with_salary(salaries)
         vacancies_statistics[lang] = {
             "vacancies_found": len(vacancies),
-            "vacancies_processed": len(select_vacancies_with_salary(salaries)),
-            "average_salary": get_average_salary(salaries)
+            "vacancies_processed": len(vacancies_with_salary),
+            "average_salary": get_average_salary(vacancies_with_salary)
         }
     return vacancies_statistics
 
@@ -120,10 +121,11 @@ def get_sj_vacancies_statistics(prog_languages, superjob_token):
     for lang in prog_languages:
         vacancies = get_sj_vacancies(lang, superjob_token)
         salaries = get_sj_vacancy_salaries(vacancies)
+        vacancies_with_salary = select_vacancies_with_salary(salaries)
         vacancies_statistics[lang] = {
             "vacancies_found": len(vacancies),
-            "vacancies_processed": len(select_vacancies_with_salary(salaries)),
-            "average_salary": get_average_salary(salaries)
+            "vacancies_processed": len(vacancies_with_salary),
+            "average_salary": get_average_salary(vacancies_with_salary)
         }
     return vacancies_statistics
 
@@ -139,8 +141,7 @@ def predict_salary(salary_from, salary_to):
     return int(salary_rub)
 
 
-def get_average_salary(vacancies_salaries):
-    vacancies_salaries = select_vacancies_with_salary(vacancies_salaries)
+def get_average_salary(vacancies_with_salary):
     if len(vacancies_salaries):
         avg_salary = sum(vacancies_salaries)/len(vacancies_salaries)
         return int(avg_salary)
