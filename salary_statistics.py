@@ -41,9 +41,7 @@ def get_hh_vacancy_salaries(vacancies):
 
 def predict_hh_rub_salary(vacancy):
     salary = vacancy["salary"]
-    if not vacancy["salary"]:
-        return
-    elif salary["currency"] != 'RUR':
+    if not vacancy["salary"] or salary["currency"] != 'RUR':
         return
     if not salary['from']:
         salary_from = None
