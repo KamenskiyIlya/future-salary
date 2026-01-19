@@ -174,7 +174,7 @@ def create_table(vacancies_statistics, name_table):
             ]
         )
     table = AsciiTable(table_data, name_table)
-    return (table)
+    return table
 
 
 def main():
