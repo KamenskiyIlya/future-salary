@@ -16,7 +16,6 @@ def get_hh_vacancies(prog_language):
             'area': city_code,
             'page': page,
             "text": f"Программист {prog_language}",
-            "text": f"Разработчик {prog_language}",
             "search_field": 'name',
             "per_page": vacancies_per_page,
             "period": period_in_days
