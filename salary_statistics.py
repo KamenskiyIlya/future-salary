@@ -28,7 +28,8 @@ def get_hh_vacancies(prog_language):
 
         pages_number = response_payload["pages"]
         page += 1
-    return vacancies
+    vacancies_count = response_payload['found']
+    return vacancies, vacancies_count
 
 
 def get_hh_vacancy_salaries(vacancies):
@@ -52,11 +53,11 @@ def predict_hh_rub_salary(vacancy):
 def get_hh_vacancies_statistics(prog_languages):
     vacancies_statistics = {}
     for lang in prog_languages:
-        vacancies = get_hh_vacancies(lang)
+        vacancies, vacancies_count = get_hh_vacancies(lang)
         salaries = get_hh_vacancy_salaries(vacancies)
         vacancies_with_salary = select_vacancies_with_salary(salaries)
         vacancies_statistics[lang] = {
-            "vacancies_found": len(vacancies),
+            "vacancies_found": vacancies_count,
             "vacancies_processed": len(vacancies_with_salary),
             "average_salary": get_average_salary(vacancies_with_salary)
         }
@@ -87,10 +88,12 @@ def get_sj_vacancies(prog_language, superjob_token):
         response_payload = response.json()
 
         vacancies.extend(response_payload['objects'])
+        
 
         next_page = response_payload['more']
         page += 1
-    return vacancies
+    vacansies_count = response_payload['total']
+    return vacancies, vacansies_count
 
 
 def get_sj_vacancy_salaries(vacancies):
@@ -118,11 +121,11 @@ def predict_sj_rub_salary(vacancy):
 def get_sj_vacancies_statistics(prog_languages, superjob_token):
     vacancies_statistics = {}
     for lang in prog_languages:
-        vacancies = get_sj_vacancies(lang, superjob_token)
+        vacancies, vacansies_count = get_sj_vacancies(lang, superjob_token)
         salaries = get_sj_vacancy_salaries(vacancies)
         vacancies_with_salary = select_vacancies_with_salary(salaries)
         vacancies_statistics[lang] = {
-            "vacancies_found": len(vacancies),
+            "vacancies_found": vacansies_count,
             "vacancies_processed": len(vacancies_with_salary),
             "average_salary": get_average_salary(vacancies_with_salary)
         }
