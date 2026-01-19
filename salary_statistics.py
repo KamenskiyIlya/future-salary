@@ -88,7 +88,6 @@ def get_sj_vacancies(prog_language, superjob_token):
         response_payload = response.json()
 
         vacancies.extend(response_payload['objects'])
-        
 
         next_page = response_payload['more']
         page += 1
